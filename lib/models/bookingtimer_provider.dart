@@ -14,11 +14,7 @@ import 'package:parking_app/services/notification_service.dart';
 import 'package:parking_app/services/sp_repository.dart';
 import 'package:provider/provider.dart';
 
-
-
-
 class BookingTimerProvider extends ChangeNotifier {
-  
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   DatabaseReference _ref = FirebaseDatabase.instance.ref('booking_spots');
   Timer? _timer;
@@ -37,10 +33,7 @@ class BookingTimerProvider extends ChangeNotifier {
   static const Duration totalBuffer = Duration(minutes: 15);
   late int _walletBalance;
   bool _warned = false;
-  bool _faultyWarned=false;
-
-   
-
+  bool _faultyWarned = false;
 
   Duration get remainingTime => _remainingTime;
   Duration get bufferTime => _bufferTime;
@@ -99,9 +92,12 @@ class BookingTimerProvider extends ChangeNotifier {
     print('Initialize listener Called');
     if (AuthService.user == null) return;
     String uid = AuthService.user!.uid;
-    
 
-    _firestore.collection('users').doc(uid).snapshots().listen((snapshot) {
+    _firestore
+        .collection('users')
+        .doc(uid)
+        .snapshots()
+        .listen((snapshot) async {
       if (snapshot.exists) {
         var data = snapshot.data();
         if (data != null) {
@@ -112,6 +108,18 @@ class BookingTimerProvider extends ChangeNotifier {
           if (_secondScan == true) {
             _pendingPay = true;
             _timeParked = data['timeParked'];
+
+            String vehicle = "car";
+            if (_slot!.startsWith('B')) {
+              vehicle = "bike";
+            }
+            _ref.child('${_space}/${vehicle} slots/${_slot}').set(0);
+            DatabaseReference slotRef = _ref.child('${_space}/${vehicle}');
+            final snapshot = await slotRef.once();
+            final currentValue = snapshot.snapshot.value != null
+                ? int.parse(snapshot.snapshot.value.toString())
+                : 0;
+            await slotRef.set(currentValue + 1);
             return;
           }
 
@@ -146,20 +154,17 @@ class BookingTimerProvider extends ChangeNotifier {
             }
             _space = data['spot'];
             _slot = data['slot'];
-            if(data.containsKey('faultyParking')){
-              if(data['faultyParking']==true){
-                _showFaultyNotif();
-                _faultyWarned=true;
-                data['faultyParking']=false;
+            if (data.containsKey('faultyParking')) {
+              if (data['faultyParking'] == true) {
+                _faultyWarned = true;
+                data['faultyParking'] = false;
               }
               // }else{
               //   if(_faultyWarned==true&&data['faultyParking']==false){
               //     showFaultyCorrected();
               //     _faultyWarned=false;
               //   }
-              // }
-            }
-            else if (data.containsKey('parkedSlot')) {
+            } else if (data.containsKey('parkedSlot')) {
               String _parkedSlot = data['parkedSlot'];
               if (_parkedSlot != _slot) {
                 showNotification();
@@ -193,12 +198,18 @@ class BookingTimerProvider extends ChangeNotifier {
       clear();
     }
   }
-  void _showFaultyNotif(){
-      NotificationService.showInstantNotification('You have simultaneously parked in two slots','Please park only in the slot ${_slot}');
+
+  void _showFaultyNotif() {
+    NotificationService.showInstantNotification(
+        'You have simultaneously parked in two slots',
+        'Please park only in the slot ${_slot}');
   }
-  void showFaultyCorrected(){
-    NotificationService.showInstantNotification('Congratulations', 'You have parked correctly');
+
+  void showFaultyCorrected() {
+    NotificationService.showInstantNotification(
+        'Congratulations', 'You have parked correctly');
   }
+
   void _calcTimeParked() {
     _timeParked = DateTime.timestamp().difference(_parkedTime!);
     print('Parking Duration:${timeParked.toString()}');
