@@ -63,3 +63,4 @@ class BookingspotsProvider extends ChangeNotifier {
     super.dispose();
   }
 }
+  

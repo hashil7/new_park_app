@@ -104,25 +104,31 @@ class BookingTimerProvider extends ChangeNotifier {
           _timer?.cancel();
           _parkingTimer?.cancel();
           _walletBalance = data['walletBalance'];
-          bool _secondScan = data['secondScan'];
-          if (_secondScan == true) {
-            _pendingPay = true;
-            _timeParked = data['timeParked'];
+          if (data.containsKey('secondScan')) {
+            bool _secondScan = data['secondScan'];
+            if (_secondScan == true) {
+              _pendingPay = true;
 
-            String vehicle = "car";
-            if (_slot!.startsWith('B')) {
-              vehicle = "bike";
+              String vehicle = "car";
+              if (_slot!.startsWith('B')) {
+                vehicle = "bike";
+              }
+              _ref.child('${_space}/${vehicle} slots/${_slot}').set(0);
+              DatabaseReference slotRef = _ref.child('${_space}/${vehicle}');
+              final snapshot = await slotRef.once();
+              final currentValue = snapshot.snapshot.value != null
+                  ? int.parse(snapshot.snapshot.value.toString())
+                  : 0;
+              await slotRef.set(currentValue + 1);
+              await _firestore
+                  .collection('users')
+                  .doc(AuthService.user!.uid)
+                  .update({'secondScan': false});
+              _parkingTimer?.cancel();
+
+              return;
             }
-            _ref.child('${_space}/${vehicle} slots/${_slot}').set(0);
-            DatabaseReference slotRef = _ref.child('${_space}/${vehicle}');
-            final snapshot = await slotRef.once();
-            final currentValue = snapshot.snapshot.value != null
-                ? int.parse(snapshot.snapshot.value.toString())
-                : 0;
-            await slotRef.set(currentValue + 1);
-            return;
           }
-
           if (data.containsKey('bookingTime')) {
             print('Detected booking Time from fb');
             Timestamp bookedTimeStamp = data['bookingTime'];
@@ -137,10 +143,17 @@ class BookingTimerProvider extends ChangeNotifier {
           } else if (data.containsKey('timeParked')) {
             _parkingTimer?.cancel();
             _timeParked = Duration(seconds: data['timeParked']);
+            if (_timeParked.inSeconds < 0) {
+              _timeParked = _timeParked + Duration(seconds: 900);
+              _firestore
+                  .collection('users')
+                  .doc(AuthService.user!.uid)
+                  .update({'timeParked': _timeParked.inSeconds});
+            }
             _pendingPay = true;
             notifyListeners();
           } else {
-            _resetLocalValues();
+            resetLocalValues();
           }
           if (data.containsKey('parkingTime')) {
             Timestamp parkedTimestamp = data['parkingTime'];
@@ -164,7 +177,8 @@ class BookingTimerProvider extends ChangeNotifier {
               //     showFaultyCorrected();
               //     _faultyWarned=false;
               //   }
-            } else if (data.containsKey('parkedSlot')) {
+            }
+            if (data.containsKey('parkedSlot')) {
               String _parkedSlot = data['parkedSlot'];
               if (_parkedSlot != _slot) {
                 showNotification();
@@ -225,7 +239,7 @@ class BookingTimerProvider extends ChangeNotifier {
     SharedPreferenceRepository.instance.removeKey(parkingTimerKey);
   }
 
-  void _resetLocalValues() {
+  void resetLocalValues() {
     _booked = false;
     _parked = false;
     _pendingPay = false;
@@ -380,7 +394,7 @@ class BookingTimerProvider extends ChangeNotifier {
       print('Error Cancelling Booking $e');
     }
     clear();
-    _resetLocalValues();
+    resetLocalValues();
   }
 
   void addTime(Duration addonTime) async {
@@ -417,6 +431,7 @@ class BookingTimerProvider extends ChangeNotifier {
         'spot': FieldValue.delete(),
         'slot': FieldValue.delete(),
         'parkedSlot': FieldValue.delete(),
+        'parkedTime': FieldValue.delete(),
       });
     } catch (e) {
       print('Error Deleting Values $e');

@@ -89,7 +89,11 @@ class _PaymentPageState extends State<PaymentPage> {
             ),
             SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                notifier.resetLocalValues();
+                notifier.clear();
+
+              },
               child: Text(
                 'Pay',
                 style: TextStyle(fontSize: 20),
