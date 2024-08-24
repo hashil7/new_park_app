@@ -112,6 +112,11 @@ class BookingTimerProvider extends ChangeNotifier {
           if (_secondScan == true) {
             _pendingPay = true;
             _timeParked = data['timeParked'];
+            String vehicle = "car slots";
+            if (_slot!.startsWith('B')) {
+              vehicle = "bike slots";
+            }
+            _ref.child('${_space}/${vehicle}/${_slot}').set(0);
             return;
           }
 
