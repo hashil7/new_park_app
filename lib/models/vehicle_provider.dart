@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class VehicleProvider with ChangeNotifier {
-  String _selectedVehicle = 'bike';
+  String _selectedVehicle = 'car';
   bool _isCar = true;
 
   String get selectedVehicle => _selectedVehicle;

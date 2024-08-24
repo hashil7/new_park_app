@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
       print(AuthService.user?.displayName.toString());
     }
     WidgetsBinding.instance.addObserver(this);
-    Future.wait([Future.delayed(Duration(seconds: 7))]).whenComplete(() {
+    Future.wait([Future.delayed(Duration(seconds: 5))]).whenComplete(() {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -88,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen>
               height: 50,
             ),
             TypeWriter(
-              text: 'Welcome to \nSmart Parking.',
+              text: 'Welcome to \n  P-SUVIDA',
               delay: Duration(milliseconds: 100),
             ),
           ],

@@ -474,8 +474,8 @@ class _BookingSheetState extends State<BookingSheet> {
                                               BorderRadius.circular(10))),
                                   onPressed: () async {
                                     if (status.slot == null) {
-                                      Fluttertoast.showToast(
-                                          msg: 'Pick a slot');
+                                      // Fluttertoast.showToast(
+                                      //     msg: 'Pick a slot');
                                     } else if (status.booked == false) {
                                       status.booked = true;
                                       status.saveBookingTimetoFirebase(

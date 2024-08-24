@@ -66,7 +66,8 @@ Future<void> fetchInitialParkingSpots(
               
               locationImage: images,
               avgFillingTime: values['fillingTime'],
-              parkingType: values['parkingType'],
+              carParkingType: values['carParkingType'],
+              bikeParkingType: values['bikeParkingType'],
               bigCarSpots: freeBigCarSlots,
               type: 'onstreet'),
         );
@@ -88,7 +89,7 @@ Future<void> fetchInitialParkingSpots(
             longitude: values['long'],
             freeCarSlots: values['car'],
             freeBikeSlots: values['bike'],
-            parkingType: values['parkingType'],
+            //parkingType: values['parkingType'],
             locationImage: images,
             type: 'booking',
             
@@ -125,7 +126,8 @@ void listenForParkingSpotChanges(ParkingSpotsNotifier notifier) {
         freeBikeSlots: freeBikeSlots,
         locationImage: images,
         avgFillingTime: values['fillingTime'],
-        parkingType: values['parkingType'],
+        carParkingType: values['carParkingType'],
+        bikeParkingType: values['bikeParkingType'],
         bigCarSpots: freeBigCarSlots,
         type: 'onstreet', // Use a default image
       );
@@ -147,7 +149,7 @@ void listenForParkingSpotChanges(ParkingSpotsNotifier notifier) {
         freeCarSlots: values['car'],
         freeBikeSlots: values['bike'],
         locationImage: images,
-        parkingType: values['parkingType'],
+        //parkingType: values['parkingType'],
         type: 'booking',
         price: values['price'],
         
@@ -177,7 +179,8 @@ void listenForParkingSpotChanges(ParkingSpotsNotifier notifier) {
         freeBikeSlots: freeBikeSlots,
         locationImage: images,
         avgFillingTime: values['fillingTime'],
-        parkingType: values['parkingType'],
+        carParkingType: values['carParkingType'],
+        bikeParkingType: values['bikeParkingType'],
         bigCarSpots: freeBigCarSlots,
         type: 'onStreet',
         // Use a default image
@@ -199,7 +202,7 @@ void listenForParkingSpotChanges(ParkingSpotsNotifier notifier) {
         freeCarSlots: values['car'],
         freeBikeSlots: values['bike'],
         locationImage: images, 
-        parkingType: values['parkingType'],
+        //parkingType: values['parkingType'],
         type: 'booking',
         price: values['price'],
         

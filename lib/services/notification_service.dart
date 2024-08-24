@@ -132,6 +132,67 @@ class NotificationService {
     }
   }
 
+
+
+static Future<void> showinsidePolygonNotification(
+  BuildContext context,
+) async {
+  if (context.mounted) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("No parking area"),
+          content: Text(
+            "This is a no parking zone, Please move your vehicle immediately. Or else you will be fined.",
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  } else {
+    print('Context is not mounted. Cannot show dialog.');
+  }
+}
+
+
+static Future<void> showWrongParkingNotification(BuildContext context) async {
+  // Ensure the context is still mounted before showing the dialog
+  if (!context.mounted) {
+    print('Context is not mounted. Cannot show dialog.');
+    return;
+  }
+
+  // Show the alert dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("No parking area"),
+        content: Text(
+          "This is a no parking zone, Please move your vehicle immediately. Or else you will be fined.",
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text("Ok"),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
   // Handle notification responses (optional)
   static Future<void> onDidReceiveNotificationResponse(
       NotificationResponse notificationResponse) async {

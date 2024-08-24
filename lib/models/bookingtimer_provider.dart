@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:parking_app/constants.dart';
 import 'package:parking_app/models/vehicle_provider.dart';
 
@@ -12,6 +13,9 @@ import 'package:parking_app/services/notification_service.dart';
 
 import 'package:parking_app/services/sp_repository.dart';
 import 'package:provider/provider.dart';
+
+
+
 
 class BookingTimerProvider extends ChangeNotifier {
   
@@ -34,6 +38,9 @@ class BookingTimerProvider extends ChangeNotifier {
   late int _walletBalance;
   bool _warned = false;
   bool _faultyWarned=false;
+
+   
+
 
   Duration get remainingTime => _remainingTime;
   Duration get bufferTime => _bufferTime;

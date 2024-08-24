@@ -219,14 +219,14 @@ void _checkUserPresence() async {
             spot.latitude,
             spot.longitude,
           );
-          return distance <= 15; // 10 meters
+          return distance <= 10; // 10 meters
         }).toList();
 
     print('Number of nearby spots found: ${nearbySpots.length}');
 
     if (nearbySpots.isNotEmpty) {
       if (_proximityTimer == null) {
-        _proximityTimer = Timer(Duration(seconds: 30), () {
+        _proximityTimer = Timer(Duration(seconds: 20), () {
           _showParkingAlert(userPosition); // Pass user position to the alert
           _proximityTimer = null;
             // Reset timer after showing alert

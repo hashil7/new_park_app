@@ -229,8 +229,8 @@ void _monitorSpeedAndStop() {
   double speed = _currentLocation.speed;
   //print('Current speed: $speed');
 
-  const double speedThreshold = 5.0; // Speed threshold in m/s
-  const Duration stopDuration = Duration(seconds: 20); // Stop duration before showing notification
+  const double speedThreshold = 1.0; // Speed threshold in m/s
+  const Duration stopDuration = Duration(seconds: 10); // Stop duration before showing notification
 
   if (speed > speedThreshold) {
     //print('Speed above threshold, resetting stop timer.');
@@ -271,6 +271,8 @@ void _monitorSpeedAndStop() {
                   //print('User confirmed they are inside the polygon.');
 
                   // Save the user's response, location, speed, stop duration, and polygon name
+                  NotificationService.showinsidePolygonNotification(navigatorKey.currentState!.context,);
+                  NotificationService.showInstantNotification("This is a no parking zone!", "Please move your vehicle immediatly ");
                   _dataSaver.saveData(
                     response: 'Yes',
                     location: _currentLocation,

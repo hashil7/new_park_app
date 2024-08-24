@@ -47,6 +47,7 @@ class _PaymentPageState extends State<PaymentPage> {
   Widget build(BuildContext context) {
     return Consumer<BookingTimerProvider>(builder: (context, notifier, child) {
       amount = notifier.timeParked.inSeconds * 0.01111;
+      final String formattedAmount = amount.toStringAsFixed(2);
       return Scaffold(
           body: Container(
         color: Colors.amber[20],
@@ -69,19 +70,20 @@ class _PaymentPageState extends State<PaymentPage> {
               size: 320,
               gapless: false,
             ),
-            Text(
-              notifier.parkedTime == null
-                  ? ' '
-                  : "Vehicle Parked at ${(notifier.parkedTime!.hour).toString().padLeft(2, "0")}:${(notifier.parkedTime!.minute).toString().padLeft(2, "0")}",
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
+            // Text(
+            //   notifier.parkedTime == null
+            //       ? ' '
+            //       : "Vehicle Parked at ${(notifier.parkedTime!.hour).toString().padLeft(2, "0")}:${(notifier.parkedTime!.minute).toString().padLeft(2, "0")}",
+            //   style: TextStyle(
+            //     fontSize: 20,
+            //   ),
+            // ),
+            Text('Booked Slot: ${notifier.slot}',style: TextStyle(fontSize: 20),),
             ParkedTime(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Total Amount: ₹ ${amount}',
+                Text('Total Amount: ₹ ${formattedAmount}',
                     style: TextStyle(fontSize: 20)),
               ],
             ),

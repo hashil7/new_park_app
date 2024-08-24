@@ -77,7 +77,8 @@ class ParkingSpot extends ChangeNotifier {
   int? _bigCarSpots; // Ensure this line is present
   final List<String> locationImage;
   final String type;
-  final String parkingType;
+  String? carParkingType;
+  String? bikeParkingType;
   int? price;
   int? avgFillingTime;
 
@@ -94,7 +95,8 @@ class ParkingSpot extends ChangeNotifier {
     int? bigCarSpots, // Ensure this line is present
     required this.locationImage,
     required this.type,
-    required this.parkingType,
+    this.carParkingType,
+    this.bikeParkingType,
     this.price,
     this.avgFillingTime,
   })  : _freeCarSlots = freeCarSlots,

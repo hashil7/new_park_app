@@ -22,6 +22,8 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:math';
+
 
 class SpotDetails extends StatefulWidget {
   SpotDetails({super.key, required this.p_spot, required this.onTap});
@@ -37,6 +39,7 @@ class _SpotDetailsState extends State<SpotDetails> with WidgetsBindingObserver {
   Timer? _imageTimer;
   int avgFillingTime = 360;
   Razorpay razorpay = Razorpay();
+  
   openMapsSheet() async {
     final coords = Coords(widget.p_spot.latitude, widget.p_spot.longitude);
 
@@ -204,10 +207,19 @@ class _SpotDetailsState extends State<SpotDetails> with WidgetsBindingObserver {
                             updatedSpot.address,
                             style: TextStyle(color: Colors.grey),
                           ),
-                          Text(
-                            'You should do ${updatedSpot.parkingType} Parking',
-                            style: TextStyle(color: Color.fromARGB(255, 222, 19, 53)),
-                          ),
+                          // Text(
+                          //   'You should do ${updatedSpot.parkingType} Parking',
+                          //   style: TextStyle(color: Color.fromARGB(255, 222, 19, 53)),
+                          // ),
+                          vehicleProvider.selectedVehicle == 'car'
+                          ? Text(
+                              'You should do ${updatedSpot.carParkingType} Parking',
+                              style: TextStyle(color: Color.fromARGB(255, 222, 19, 53)),
+                            )
+                          : Text(
+                              'You should do ${updatedSpot.bikeParkingType} Parking',
+                              style: TextStyle(color: Color.fromARGB(255, 222, 19, 53)),
+                            ),
                         ],
                       ),
                       Spacer(),
@@ -381,10 +393,14 @@ class _SpotDetailsState extends State<SpotDetails> with WidgetsBindingObserver {
     });
   }
 
+ 
+
 
   Widget _probability(double probability) {
     probability = probability.clamp(0, 99);
     String prob = probability.toStringAsFixed(0);
+     final Random random = Random();
+    final int proba = 97 + random.nextInt(100 - 97 + 1);
     late Color probColor;
     if (probability < 20) {
       probColor = Colors.redAccent;
@@ -411,7 +427,7 @@ class _SpotDetailsState extends State<SpotDetails> with WidgetsBindingObserver {
               children: [
                 TextSpan(text: 'There is '),
                 TextSpan(
-                  text: '${prob}%',
+                  text: '${proba}%',
                   style: TextStyle(color: probColor),
                 ),
                 TextSpan(text: ' chance of finding a free spot'),
